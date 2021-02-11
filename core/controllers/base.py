@@ -33,12 +33,13 @@ from core.domain import config_domain
 from core.domain import config_services
 from core.domain import user_services
 import feconf
+from proto import test_pb2
+
 import python_utils
 import utils
 
 import backports.functools_lru_cache
 import webapp2
-
 
 ONE_DAY_AGO_IN_SECS = -24 * 60 * 60
 DEFAULT_CSRF_SECRET = 'oppia csrf secret'
@@ -343,6 +344,26 @@ class BaseHandler(webapp2.RequestHandler):
 
         json_output = json.dumps(values, cls=utils.JSONEncoderForHTML)
         self.response.write('%s%s' % (feconf.XSSI_PREFIX, json_output))
+
+    def render_proto(self):
+        """Prepares a proto response to be sent to the client."""
+        self.response.content_type = b'application/octet-stream; charset=utf-8'
+        self.response.headers[
+            b'Content-Disposition'] = python_utils.convert_to_bytes(
+                'attachment; filename=oppia-protoTest')
+
+        address_book = test_pb2.AddressBook()
+        person = address_book.people.add()
+        person.id = 1
+        person.name = 'testUser1'
+        person2 = address_book.people.add()
+        person2.id = 2
+        person2.name = 'testUser2'
+        person3 = address_book.people.add()
+        person3.id = 3
+        person3.name = 'testUser3'
+        person3.email = 's@s.com'
+        self.response.write(address_book.SerializeToString())
 
     def render_downloadable_file(self, values, filename, content_type):
         """Prepares downloadable content to be sent to the client.

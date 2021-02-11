@@ -57,6 +57,7 @@ from core.controllers import story_viewer
 from core.controllers import subscriptions
 from core.controllers import subtopic_viewer
 from core.controllers import suggestion
+from core.controllers import test_proto_handler
 from core.controllers import topic_editor
 from core.controllers import topic_viewer
 from core.controllers import topics_and_skills_dashboard
@@ -69,7 +70,6 @@ from mapreduce import main as mapreduce_main
 from mapreduce import parameters as mapreduce_parameters
 import webapp2
 from webapp2_extras import routes
-
 
 current_user_services = models.Registry.import_current_user_services()
 transaction_services = models.Registry.import_transaction_services()
@@ -835,6 +835,9 @@ URLS = MAPREDUCE_HANDLERS + [
 
     get_redirect_route(
         r'/learn/<classroom_url_fragment>', classroom.ClassroomPage),
+
+    get_redirect_route(
+        r'/test', test_proto_handler.TestProtoHandler)
 ]
 
 # Adding redirects for topic landing pages.
